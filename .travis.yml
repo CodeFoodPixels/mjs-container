@@ -9,10 +9,10 @@ before_install:
  - sudo apt-get install build-essential
 
 after_success:
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - git clone --depth=1 https://github.com/cesanta/mjs.git
-  - export TAG=$(git --git-dir mjs/.git describe --abbrev=0 --tags);
+  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+  - git clone https://github.com/cesanta/mjs.git
+  - export TAG=$(git --git-dir mjs/.git describe --abbrev=0 --tags)
   - git --git-dir mjs/.git checkout $TAG
   - make -C mjs/mjs
-  - docker build -f Dockerfile -t lukebuk/mjs:$TAG
+  - docker build -t lukebuk/mjs:latest -t lukebuk/mjs:$TAG .
   - docker push lukebuk/mjs
