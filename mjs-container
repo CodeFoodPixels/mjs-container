@@ -1,0 +1,43 @@
+#! /bin/bash
+
+image="lukebuk/mjs"
+directory=$(pwd)
+file=""
+code=""
+flags=""
+
+while getopts ":f:i:c:" opt; do
+    case $opt in
+        f)
+            fullpath=$(readlink -f ${OPTARG})
+            directory=$(dirname $fullpath)
+            file=$(basename $fullpath)
+            ;;
+        i)
+            image=${OPTARG}
+            ;;
+        c)
+            code=${OPTARG}
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+             exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+
+if [ $file ]; then
+    flags+="-v $directory:/mjs-data -w /mjs-data"
+    cmd="$file"
+fi
+
+if [ $code ]; then
+    cmd="-e $code"
+fi
+
+docker run --rm $flags $image $cmd
+
