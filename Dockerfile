@@ -1,5 +1,5 @@
-FROM alpine:latest
+FROM debian:stable-slim
 
-COPY mjs/mjs/build/mjs /
+COPY mjs/mjs/build/mjs /bin/mjs
 
-ENTRYPOINT [ "./mjs" ]
+ENTRYPOINT [ "mjs" ]
