@@ -9,4 +9,6 @@ before_install:
  - sudo apt-get install build-essential
 
 after_success:
+  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
   - ./build.sh
+  - docker push lukebuk/mjs
