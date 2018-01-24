@@ -4,7 +4,6 @@ image="lukebuk/mjs"
 directory=$(pwd)
 file=""
 code=""
-flags=""
 
 while getopts ":f:i:c:" opt; do
     case $opt in
@@ -31,13 +30,9 @@ while getopts ":f:i:c:" opt; do
 done
 
 if [ $file ]; then
-    flags+="-v $directory:/mjs-data -w /mjs-data"
-    cmd="$file"
+    docker run --rm -v $directory:/mjs-data -w /mjs-data $image $file
 fi
 
-if [ $code ]; then
-    cmd="-e $code"
+if [[ $code ]]; then
+    docker run --rm $image -e "$code"
 fi
-
-docker run --rm $flags $image $cmd
-
