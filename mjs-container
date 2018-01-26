@@ -5,12 +5,13 @@ directory=$(pwd)
 file=""
 code=""
 
-while getopts ":f:i:c:" opt; do
+while getopts ":f:d:i:c:" opt; do
     case $opt in
         f)
-            fullpath=$(readlink -f ${OPTARG})
-            directory=$(dirname $fullpath)
-            file=$(basename $fullpath)
+            file=${OPTARG}
+            ;;
+        d)
+            directory=$(cd "${OPTARG}"; pwd)
             ;;
         i)
             image=${OPTARG}
@@ -30,9 +31,9 @@ while getopts ":f:i:c:" opt; do
 done
 
 if [ $file ]; then
-    docker run --rm -v $directory:/mjs-data -w /mjs-data $image $file
+    docker run --rm -v "$directory:/mjs-data" -w /mjs-data $image "$file"
 fi
 
-if [[ $code ]]; then
+if [ $code ]; then
     docker run --rm $image -e "$code"
 fi
