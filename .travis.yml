@@ -10,5 +10,6 @@ before_install:
 
 after_success:
   - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-  - ./build.sh
-  - docker push lukebuk/mjs
+  - . ./build.sh
+  - 'export TAG_MATCHES=$(curl -s https://registry.hub.docker.com/v2/repositories/lukebuk/mjs/tags/ | fgrep "\"name\": \"$MJS_TAG\"")'
+  - if [ -z "$TAG_MATCHES" ]; then docker push lukebuk/mjs; fi
